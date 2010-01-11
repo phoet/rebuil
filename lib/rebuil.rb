@@ -45,3 +45,9 @@ module Rebuil
     end
   end
 end
+
+class Object
+  def rebuil
+    yield Rebuil::Expression.new
+  end
+end

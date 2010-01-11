@@ -23,8 +23,16 @@ module Rebuil
       @exp = ""
     end
     
-    def group(expression)
-      @exp << "(" << expression << ")"
+    def group(expression=nil)
+      @exp << "("
+      @exp << expression unless expression.nil?
+      yield self if block_given?
+      @exp << ")"
+      self
+    end
+    
+    def characters(characters)
+      @exp << "[" << characters << "]"
       self
     end
     

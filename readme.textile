@@ -4,9 +4,12 @@ p. A readable DSL for Ruby "Regexp":http://www.ruby-doc.org/docs/ProgrammingRuby
 
 h2. Usage
 
-bc.. puts "cool" if rebuil("hello world") do 
+bc.. match = rebuil("hello world") do
 	many
-end.line_end =~ "hello world with rebuil"
+	group("rebuil")
+end.match('hello world with rebuil')
+
+puts "#{match[1]} is cool"
 
 h2. Examples
 

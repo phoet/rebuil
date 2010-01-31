@@ -1,18 +1,10 @@
-# = FileCache
+# = Rebuil
 #
-# FileCache is a simple utility to persist arbitrary data into a file.
-# Just wrap the action you want to cache into a FileCache call and it will be available for 30 minutes by default.
-#
-# FileCache uses the default tmp-directory of your OS, but you may override that setting via +file_cache_dir+
+# some description here
 #
 # == Example
 #
-#   require 'file_cache'
-#   include FileCache
-#
-#   file_cache :cache_token_name do
-#     #some_stuff_that_should_be_cached_executed_here
-#   end
+#   some code here
 #
 module Rebuil
   class Expression
@@ -21,19 +13,54 @@ module Rebuil
     
     def initialize
       @exp = ""
+      @options = []
     end
     
-    def group(expression=nil)
+    def group(expression="", &block)
       @exp << "("
-      @exp << expression unless expression.nil?
-      yield self if block_given?
+      apply_params expression, &block
       @exp << ")"
       self
     end
     
     def characters(characters)
-      @exp << "[" << characters << "]"
-      self
+      @exp << "[" << characters << "]" and self
+    end
+    
+    def escape(characters)
+      @exp << Regexp.escape(characters) and self
+    end
+    
+    alias_method :<<, :escape
+    
+    def line_start
+      @exp << "^" and self
+    end
+    
+    def line_end
+      @exp << "$" and self
+    end
+
+    def line(expression="", &block)
+      line_start
+      apply_params expression, &block
+      line_end
+    end
+        
+    def string_start
+      @exp << "\A" and self
+    end
+    
+    def string_end
+      @exp << "\z" and self
+    end
+    
+    def any
+      @exp << "." and self
+    end
+    
+    def many
+      @exp << ".*" and self
     end
     
     def to_s
@@ -41,13 +68,32 @@ module Rebuil
     end
     
     def to_r
-      /#{@exp}/
+      Regexp.new(@exp, @options.flatten)
     end
+    
+    def =~(obj)
+      to_r =~ obj
+    end
+    
+    def match(str)
+      to_r.match str
+    end
+    
+    private
+    
+    def apply_params(expression, &block)
+      @exp << expression
+      block.arity < 1 ? instance_eval(&block) : block.call(self) if block_given?
+    end
+    
   end
 end
 
 class Object
-  def rebuil
-    yield Rebuil::Expression.new
+  def rebuil(expression="", &block)
+    re = Rebuil::Expression.new
+    re << expression
+    block.arity < 1 ? re.instance_eval(&block) : block.call(re) if block_given?
+    re
   end
 end

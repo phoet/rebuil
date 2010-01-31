@@ -1,3 +1,13 @@
 h1. rebuil - A Regular Expression Builder
 
-p. A readable DSL for Regexp.
+p. A readable DSL for Ruby "Regexp":http://www.ruby-doc.org/docs/ProgrammingRuby/html/language.html#UJ.
+
+h2. Usage
+
+bc.. puts "cool" if rebuil("hello world") do 
+	many
+end.line_end =~ "hello world with rebuil"
+
+h2. Examples
+
+See the examples folder or the tests for further reading.

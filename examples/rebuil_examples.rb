@@ -2,8 +2,8 @@ require 'example_helper'
 
 match = rebuil("hello world") do
   many
-	group("rebuil")
+	group("rebuil", :cool)
 end.match('hello world with rebuil')
 
-puts "#{match[1]} is cool"
+puts "#{match[:cool]} is cool"
 

@@ -37,7 +37,12 @@ class TestRebuil < Test::Unit::TestCase
     exp = re.group{|exp| exp.characters("a")}
     assert_match(exp, "anna")
   end
-
+  
+  def test_group_with_match
+    exp = rebuil.many.group('rebuil', :cool_name)
+    assert_equal(exp.match('hello world with rebuil')[:cool_name], 'rebuil')
+  end
+  
   def test_rebuil_method
     assert_match(rebuil("uschi") << "sushi", "uschisushi")
   end

@@ -14,9 +14,12 @@ module Rebuil
     def initialize
       @exp = ""
       @options = []
+      @keys = []
+      @matches = {}
     end
     
-    def group(expression="", &block)
+    def group(expression="", key=nil, &block)
+      @keys << key
       @exp << "("
       apply_params expression, &block
       @exp << ")"
@@ -76,7 +79,11 @@ module Rebuil
     end
     
     def match(str)
-      to_r.match str
+      @matches = to_r.match(str) and self
+    end
+    
+    def [](key)
+      @matches[@keys.index(key) + 1]
     end
     
     private

@@ -66,6 +66,12 @@ module Rebuil
       @exp << ".*" and self
     end
     
+    def times(t)
+      @exp << "{#{t}}" and self
+    end
+    
+    alias_method :any_times, :many
+    
     def to_s
       @exp
     end

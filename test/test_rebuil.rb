@@ -43,6 +43,14 @@ class TestRebuil < Test::Unit::TestCase
     assert_equal(exp.match('hello world with rebuil')[:cool_name], 'rebuil')
   end
   
+  def test_times
+    assert_match(rebuil('a').times(5).any, 'aaaaab')
+  end
+  
+  def test_any_times
+    assert_match(rebuil('a').any_times, 'aaa')
+  end
+  
   def test_rebuil_method
     assert_match(rebuil("uschi") << "sushi", "uschisushi")
   end
